@@ -1,4 +1,4 @@
-from sqlno.common.dialects import Dialect
 from sqlno.common.query import Query
+from sqlno.mysql import engine
 
-query = Query(Dialect.MYSQL)
+query = Query(engine)

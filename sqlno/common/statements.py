@@ -1,5 +1,4 @@
 from sqlno.common.clauses import SelectClause, InsertClause
-from sqlno.common.dialects import Dialect
 
 
 class Statement(object):
@@ -36,8 +35,8 @@ class SelectStatement(Statement):
 
 
 class InsertStatement(Statement):
-    def __init__(self, dialect):
-        super(InsertStatement, self).__init__(dialect)
+    def __init__(self, engine):
+        super(InsertStatement, self).__init__(engine)
 
         self.insert_clause = None
         self.values_clause = None
@@ -51,17 +50,5 @@ class InsertStatement(Statement):
         return [self.insert_clause, self.values_clause]
 
     @classmethod
-    def create(cls, dialect):
-        if dialect == Dialect.MYSQL:
-            return MySqlInsertStatement(dialect)
-        return InsertStatement(dialect)
-
-
-class MySqlInsertStatement(InsertStatement):
-    def __init__(self, dialect):
-        super(MySqlInsertStatement, self).__init__(dialect)
-        self.on_duplicate_key_update_clause = None
-
-    @property
-    def clauses(self):
-        return filter(None, super(MySqlInsertStatement, self).clauses + [self.on_duplicate_key_update_clause])
+    def create(cls, engine):
+        return engine.insert_statement_cls(engine)

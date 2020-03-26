@@ -1,6 +1,3 @@
-from sqlno.common.dialects import Dialect
-
-
 class Clause(object):
     def __init__(self, statement):
         self.statement = statement
@@ -33,17 +30,6 @@ class FromClause(EdgeClause):
         return 'FROM {}'.format(', '.join([str(table) for table in self.tables]))
 
 
-class MySqlOnDuplicateKeyUpdateClause(EdgeClause):
-    def __init__(self, statement, *assignments):
-        super(MySqlOnDuplicateKeyUpdateClause, self).__init__(statement)
-        self.assignments = assignments
-
-    def __str__(self):
-        return 'ON DUPLICATE KEY UPDATE {}'.format(
-            ', '.join([str(assignment) for assignment in self.assignments])
-        )
-
-
 class ValuesClause(EdgeClause):
     def __init__(self, statement, *values_lists):
         super(ValuesClause, self).__init__(statement)
@@ -60,18 +46,7 @@ class ValuesClause(EdgeClause):
 
     @classmethod
     def create(cls, statement, *values_lists):
-        if statement.dialect == Dialect.MYSQL:
-            return MySqlValuesClause(statement, *values_lists)
-        return ValuesClause(statement, *values_lists)
-
-
-class MySqlValuesClause(ValuesClause):
-    def __init__(self, statement, *values_lists):
-        super(MySqlValuesClause, self).__init__(statement, *values_lists)
-
-    def on_duplicate_key_update(self, *assignments):
-        self.statement.on_duplicate_key_update_clause = MySqlOnDuplicateKeyUpdateClause(self.statement, *assignments)
-        return self.statement.on_duplicate_key_update_clause
+        return statement.dialect.values_clause_cls(statement, *values_lists)
 
 
 class SelectClause(EdgeClause):
