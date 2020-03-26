@@ -1,5 +1,5 @@
-from sqlno.clauses import SelectClause, InsertClause
-from sqlno.dialects import Dialect
+from sqlno.common.clauses import SelectClause, InsertClause
+from sqlno.common.dialects import Dialect
 
 
 class Statement(object):

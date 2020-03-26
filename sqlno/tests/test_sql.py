@@ -1,9 +1,8 @@
-from sqlno import CASE_WHEN
-from sqlno.aliases import ASTRIX, GTE, SET, CASE
-from sqlno.expressions import Assignment
-from sqlno.functions import Values, If, Coalesce
-from sqlno.query import mysql
-from sqlno.structures import Table
+from sqlno.common.aliases import ASTRIX, GTE, SET, CASE, CASE_WHEN
+from sqlno.common.expressions import Assignment
+from sqlno.common.functions import Values, If, Coalesce
+from sqlno.mysql.query import query as mysql
+from sqlno.common.structures import Table
 
 
 def test_select():

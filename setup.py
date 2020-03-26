@@ -1,11 +1,12 @@
 from setuptools import setup, find_packages
 
-REQUIREMENTS = []
-
 from os import path
+
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), 'rb') as f:
     long_description = f.read().decode('utf8')
+
+REQUIREMENTS = ['attr']
 
 setup(
     name='sqlno',
@@ -18,7 +19,7 @@ setup(
     author="Singular Labs, Inc",
     author_email='devs@singular.net',
     url='https://github.com/singular-labs/parametrization',
-    keywords="pytest, parametrize, parametrization, singular",
+    keywords="sqlno, sql",
     install_requires=REQUIREMENTS,
     license="MIT License",
     python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
@@ -32,5 +33,5 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-  ],
+    ],
 )

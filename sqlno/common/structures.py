@@ -1,4 +1,4 @@
-from sqlno.expressions import GreaterThenOperator
+from sqlno.common.expressions import GreaterThenOperator
 
 
 class IntegerColumn(object):

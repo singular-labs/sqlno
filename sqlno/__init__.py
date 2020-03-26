@@ -1,1 +1,1 @@
-from aliases import *
+from sqlno.common.aliases import *
