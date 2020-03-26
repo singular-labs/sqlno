@@ -9,30 +9,30 @@ from sqlno.common.expressions import (
 )
 
 # consts
-ASTRIX = '*'
-NULL = 'NULL'
+astrix = '*'
+null = 'NULL'
 
 # expression
-SET = Assignment
+set_ = Assignment
 p = Parenthesize
 s = Stringifies
 
 # boolean operators
-AND = AndOperator
-OR = OrOperator
+and_ = AndOperator
+or_ = OrOperator
 
 # identity operators
 is_ = IsOperator
-IS_NOT = IsNotOperator
+is_not = IsNotOperator
 
 # comparison operators
 eq = EqualOperator
-NE = NotEqualOperator
-GT = GreaterThenOperator
-GTE = AtMostOperator
+ne = NotEqualOperator
+gt = GreaterThenOperator
+gte = AtMostOperator
 
 # control flow functions
-CASE = CompareCaseExpression.create
+case = CompareCaseExpression.create
 case_when = ConditionCaseExpression.create
 
 
