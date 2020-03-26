@@ -1,4 +1,5 @@
-from sqlno.common.aliases import ASTRIX, GTE, SET, CASE, CASE_WHEN
+from sqlno.athena.functions import cast
+from sqlno.common.aliases import ASTRIX, GTE, SET, CASE, case_when
 from sqlno.common.expressions import Assignment
 from sqlno.common.functions import Values, If, Coalesce
 from sqlno.mysql.query import query as mysql
@@ -75,5 +76,11 @@ def test_case():
     expected_query = "SELECT CASE WHEN 1>0 THEN 'true' ELSE 'false' END;"
 
     assert mysql.select(
-        CASE_WHEN('1>0').then("'true'").else_("'false'").end()
+        case_when('1>0').then("'true'").else_("'false'").end()
     ).semicolon() == expected_query
+
+
+def test_cast():
+    expected_expression = "cast(bla AS BIGINT)"
+
+    assert str(cast('bla', 'BIGINT')) == expected_expression

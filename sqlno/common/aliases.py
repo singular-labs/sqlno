@@ -1,7 +1,11 @@
+from six.moves import reduce
+
 from sqlno.common.expressions import (
     Assignment, AtMostOperator, Parenthesize, IsNotOperator, NotEqualOperator, AndOperator, GreaterThenOperator,
     IsOperator, OrOperator, ConditionCaseExpression, CompareCaseExpression,
     ConcatOperator,
+    Stringifies,
+    EqualOperator,
 )
 
 # consts
@@ -10,23 +14,29 @@ NULL = 'NULL'
 
 # expression
 SET = Assignment
-P = Parenthesize
+p = Parenthesize
+s = Stringifies
 
 # boolean operators
 AND = AndOperator
 OR = OrOperator
 
 # identity operators
-IS = IsOperator
+is_ = IsOperator
 IS_NOT = IsNotOperator
 
 # comparison operators
+eq = EqualOperator
 NE = NotEqualOperator
 GT = GreaterThenOperator
 GTE = AtMostOperator
 
 # control flow functions
 CASE = CompareCaseExpression.create
-CASE_WHEN = ConditionCaseExpression.create
+case_when = ConditionCaseExpression.create
 
-CONCAT = ConcatOperator
+
+def concat(*operands):
+    return reduce(ConcatOperator, operands)
+
+

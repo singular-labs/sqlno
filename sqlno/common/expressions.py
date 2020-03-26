@@ -10,17 +10,6 @@ class Assignment(object):
         return '{} = {}'.format(self.column_name, self.value_expression)
 
 
-class ConcatOperator(object):
-    OPERATOR = '||'
-
-    def __init__(self, left, right, *rights):
-        self.operands = (left, right) + rights
-        self.operator = self.OPERATOR
-
-    def __str__(self):
-        return self.operator.join([str(operand) for operand in self.operands])
-
-
 class BinaryOperator(object):
     OPERATOR = None
 
@@ -33,12 +22,20 @@ class BinaryOperator(object):
         return '{} {} {}'.format(self.left, self.operator, self.right)
 
 
+class ConcatOperator(BinaryOperator):
+    OPERATOR = '||'
+
+
 class GreaterThenOperator(BinaryOperator):
     OPERATOR = '>'
 
 
 class AtMostOperator(BinaryOperator):
     OPERATOR = '>='
+
+
+class EqualOperator(BinaryOperator):
+    OPERATOR = '='
 
 
 class NotEqualOperator(BinaryOperator):
@@ -51,6 +48,14 @@ class Parenthesize(object):
 
     def __str__(self):
         return '({})'.format(str(self.expression))
+
+
+class Stringifies(object):
+    def __init__(self, string):
+        self.string = string
+
+    def __str__(self):
+        return "'{}'".format(self.string)
 
 
 class IsNotOperator(BinaryOperator):

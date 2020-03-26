@@ -3,8 +3,12 @@ class Function(object):
         self.function_name = function_name
         self.arguments = arguments
 
+    @property
+    def arguments_expression(self):
+        return ', '.join(map(str, self.arguments))
+
     def __str__(self):
-        return '{}({})'.format(self.function_name, ', '.join(map(str, self.arguments)))
+        return '{}({})'.format(self.function_name, self.arguments_expression)
 
 
 class Values(Function):
@@ -27,11 +31,10 @@ class CurrentTimestamp(Function):
         super(CurrentTimestamp, self).__init__('CURRENT_TIMESTAMP')
 
 
-class ParseDatetime(Function):
-    def __init__(self, datetime_value, datetime_format):
-        super(ParseDatetime, self).__init__('PARSE_DATETIME', datetime_value, datetime_format)
-
-
-class SubStr(Function):
+class SubStrFunction(Function):
     def __init__(self, value, start, length):
-        super(SubStr, self).__init__('SUBSTR', value, start, length)
+        super(SubStrFunction, self).__init__('substr', value, start, length)
+
+
+substr = SubStrFunction
+coalesce = Coalesce
