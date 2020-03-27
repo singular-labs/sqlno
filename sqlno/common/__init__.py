@@ -1,4 +1,5 @@
-from sqlno.common.statements import SelectStatement
+from sqlno.common import engine
+from sqlno.common.statements import SelectStatement, InsertStatement
 
 
 def select(*columns):
