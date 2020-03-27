@@ -1,40 +1,51 @@
 class Function(object):
-    def __init__(self, function_name, *arguments):
-        self.function_name = function_name
-        self.arguments = arguments
+    NAME = None
 
-    @property
-    def arguments_expression(self):
-        return ', '.join(map(str, self.arguments))
+    @classmethod
+    def format_arguments_expression(cls, *arguments):
+        return ', '.join(map(str, arguments))
 
-    def __str__(self):
-        return '{}({})'.format(self.function_name, self.arguments_expression)
+    def __call__(self, *arguments):
+        return '{}({})'.format(self.NAME, self.format_arguments_expression(*arguments))
 
 
-class Values(Function):
-    def __init__(self, column_name):
-        super(Values, self).__init__('VALUES', column_name)
+class ValuesFunction(Function):
+    NAME = 'values'
+
+    def __call__(self, column_name):
+        return super(ValuesFunction, self).__call__(column_name)
 
 
-class If(Function):
-    def __init__(self, condition, truth_value, faulty_value):
-        super(If, self).__init__('IF', condition, truth_value, faulty_value)
+class IfFunction(Function):
+    NAME = 'if'
+
+    def __call__(self, condition, truth_value, faulty_value):
+        return super(IfFunction, self).__call__(condition, truth_value, faulty_value)
 
 
-class Coalesce(Function):
-    def __init__(self, value, *rest_of_values):
-        super(Coalesce, self).__init__('COALESCE', value, *rest_of_values)
+class CoalesceFunction(Function):
+    NAME = 'coalesce'
+
+    def __call__(self, value, *rest_of_values):
+        return super(CoalesceFunction, self).__call__(value, *rest_of_values)
 
 
-class CurrentTimestamp(Function):
-    def __init__(self):
-        super(CurrentTimestamp, self).__init__('CURRENT_TIMESTAMP')
+class CurrentTimestampFunction(Function):
+    NAME = 'current_timestamp'
+
+    def __call__(self):
+        return super(CurrentTimestampFunction, self).__call__()
 
 
 class SubStrFunction(Function):
-    def __init__(self, value, start, length):
-        super(SubStrFunction, self).__init__('substr', value, start, length)
+    NAME = 'substr'
+
+    def __call__(self, string, start, length):
+        return super(SubStrFunction, self).__call__(string, start, length)
 
 
-substr = SubStrFunction
-coalesce = Coalesce
+substr = SubStrFunction()
+coalesce = CoalesceFunction()
+if_ = IfFunction()
+values = ValuesFunction()
+current_timestamp = CurrentTimestampFunction()

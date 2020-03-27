@@ -1,6 +1,5 @@
-import importlib
+from sqlno.common.clauses import ValuesClause
+from sqlno.common.statements import InsertStatement
 
-
-class Engine(object):
-    ATHENA = importlib.import_module('sqlno.athena.engine')
-    MYSQL = importlib.import_module('sqlno.common.engine')
+insert_statement_cls = InsertStatement
+values_clause_cls = ValuesClause
