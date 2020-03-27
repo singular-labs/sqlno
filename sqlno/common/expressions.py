@@ -10,16 +10,39 @@ class Assignment(object):
         return '{} = {}'.format(self.column_name, self.value_expression)
 
 
-class BinaryOperator(object):
+class Expression(object):
+    __slots__ = 'value',
+
+    def __init__(self, value):
+        self.value = value
+
+    def __sub__(self, other):
+        return SubtractOperator(self.value, other)
+
+    def __div__(self, other):
+        return DivisionOperator(self.value, other)
+
+    def __str__(self):
+        return str(self.value)
+
+    def __eq__(self, other):
+        if isinstance(other, Expression):
+            return EqualOperator(other, self.value)
+        return EqualOperator(self.value, other)
+
+    def and_(self, other):
+        return AndOperator(self.value, other)
+
+
+class BinaryOperator(Expression):
     OPERATOR = None
 
     def __init__(self, left, right):
-        self.left = left
-        self.operator = self.OPERATOR
-        self.right = right
+        super(BinaryOperator, self).__init__('{} {} {}'.format(left, self.OPERATOR, right))
 
-    def __str__(self):
-        return '{} {} {}'.format(self.left, self.operator, self.right)
+
+class DivisionOperator(BinaryOperator):
+    OPERATOR = '/'
 
 
 class ConcatOperator(BinaryOperator):
@@ -42,20 +65,14 @@ class NotEqualOperator(BinaryOperator):
     OPERATOR = '!='
 
 
-class Parenthesize(object):
+class Parenthesize(Expression):
     def __init__(self, expression):
-        self.expression = expression
-
-    def __str__(self):
-        return '({})'.format(str(self.expression))
+        super(Parenthesize, self).__init__('({})'.format(expression))
 
 
-class Stringifies(object):
+class Stringifies(Expression):
     def __init__(self, string):
-        self.string = string
-
-    def __str__(self):
-        return "'{}'".format(self.string)
+        super(Stringifies, self).__init__("'{}'".format(string))
 
 
 class IsNotOperator(BinaryOperator):
@@ -72,6 +89,10 @@ class OrOperator(BinaryOperator):
 
 class IsOperator(BinaryOperator):
     OPERATOR = 'IS'
+
+
+class SubtractOperator(BinaryOperator):
+    OPERATOR = '-'
 
 
 @attr.s()

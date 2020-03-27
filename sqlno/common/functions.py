@@ -1,3 +1,6 @@
+from sqlno.common import Expression
+
+
 class Function(object):
     NAME = None
 
@@ -6,7 +9,7 @@ class Function(object):
         return ', '.join(map(str, arguments))
 
     def __call__(self, *arguments):
-        return '{}({})'.format(self.NAME, self.format_arguments_expression(*arguments))
+        return Expression('{}({})'.format(self.NAME, self.format_arguments_expression(*arguments)))
 
 
 class ValuesFunction(Function):

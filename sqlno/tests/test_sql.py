@@ -1,8 +1,15 @@
+from sqlno import p, and_, s
+from sqlno.common import e
 from sqlno.mysql import (
-    select, astrix, t, set_, insert_into, if_, gte, values, coalesce, case, case_when
+    select, astrix, t, set_, insert_into, if_, gte, values, coalesce, case, case_when,
 )
 from sqlno.athena import (
-    cast
+    cast,
+    greatest,
+    floor,
+    to_unixtime,
+    lower,
+    json_extract_scalar,
 )
 
 
@@ -83,4 +90,50 @@ def test_case():
 def test_cast():
     expected_expression = "cast(bla AS BIGINT)"
 
-    assert cast('bla', 'BIGINT') == expected_expression
+    assert str(cast('bla', 'BIGINT')) == expected_expression
+
+
+def test_expressions():
+    expected_expression = "1 - 1 - 1"
+
+    assert str(e(1) - e(1) - e(1)) == expected_expression
+
+    expected_expression = "(a - b) / 86400"
+
+    assert str(p(e('a') - e('b')) / 86400) == expected_expression
+
+    expected_expression = "greatest(a - b, 0) / 86400"
+
+    assert str(greatest(e('a') - 'b', 0) / 86400) == expected_expression
+
+    expected_expression = "cast(floor(" \
+                          "greatest(to_unixtime(timestamp1) - to_unixtime(timestamp2), 0) / 86400) " \
+                          "AS INTEGER)"
+
+    assert str(
+        cast(
+            floor(greatest(to_unixtime('timestamp1') - to_unixtime('timestamp2'), 0) / 86400), as_='INTEGER'
+        )
+    ) == expected_expression
+
+    expected_expression = "(CASE " \
+                          "WHEN " \
+                          "lower(internal__platform) = 'android' AND " \
+                          "lower(json_extract_scalar(internal__extra, '$[\"manufacturer\"]')) = 'amazon' " \
+                          "THEN 'Amazon' " \
+                          "WHEN lower(internal__platform) = 'android' THEN 'Android' " \
+                          "WHEN lower(internal__platform) = 'ios' THEN 'iOS' " \
+                          "ELSE internal__platform " \
+                          "END)"
+
+    assert str(p(
+        case_when(
+            and_(
+                lower('internal__platform') == s('android'),
+                lower(json_extract_scalar('internal__extra', s('$["manufacturer"]'))) == s('amazon')
+            )
+        ).then(s('Amazon')).
+        when(lower('internal__platform') == s('android')).then(s('Android')).
+        when(lower('internal__platform') == s('ios')).then(s('iOS')).
+        else_('internal__platform').end()
+    )) == expected_expression

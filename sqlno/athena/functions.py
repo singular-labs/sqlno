@@ -58,14 +58,25 @@ class LengthFunction(Function):
     NAME = 'length'
 
     def __call__(self, string):
-        super(LengthFunction, self).__call__(string)
+        return super(LengthFunction, self).__call__(string)
 
 
-parse_datetime = ParseDatetimeFunction()
-replace = ReplaceFunction()
-url_extract_parameter = UrlExtractParameterFunction()
-trim = TrimFunction()
-json_extract_scalar = JsonExtractScalarFunction()
-cast = CastFunction()
-lower = LowerFunction()
-length = LengthFunction()
+class GreatestFunction(Function):
+    NAME = 'greatest'
+
+    def __call__(self, *values):
+        return super(GreatestFunction, self).__call__(*values)
+
+
+class FloorFunction(Function):
+    NAME = 'floor'
+
+    def __call__(self, value):
+        return super(FloorFunction, self).__call__(value)
+
+
+class ToUnixTimeFunction(Function):
+    NAME = 'to_unixtime'
+
+    def __call__(self, value):
+        return super(ToUnixTimeFunction, self).__call__(value)
