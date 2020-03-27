@@ -14,12 +14,16 @@ from sqlno.athena.functions import (
     TrimFunction,
     FloorFunction,
     ToUnixTimeFunction,
+    FromUnixTimeFunction,
+    DateFunction,
+    AtTimezoneFunction,
+    SumFunction,
 )
 # noinspection PyUnresolvedReferences
 from sqlno.common.aliases import (
-    p, is_, null, case_when, concat, s, eq, gt, and_
+    p, is_, null, case_when, concat, s, eq, gt, and_, or_
 )
-from sqlno.common import (e)
+from sqlno.common import (e, ArrayExpression)
 
 parse_datetime = ParseDatetimeFunction()
 replace = ReplaceFunction()
@@ -32,3 +36,8 @@ length = LengthFunction()
 greatest = GreatestFunction()
 floor = FloorFunction()
 to_unixtime = ToUnixTimeFunction()
+from_unixtime = FromUnixTimeFunction()
+date = DateFunction()
+at_timezone = AtTimezoneFunction()
+a = ArrayExpression
+sum_ = SumFunction()

@@ -17,9 +17,15 @@ set_ = Assignment
 p = Parenthesize
 s = Stringifies
 
+
 # boolean operators
-and_ = AndOperator
-or_ = OrOperator
+def and_(*operands):
+    return reduce(AndOperator, operands)
+
+
+def or_(*operands):
+    return reduce(OrOperator, operands)
+
 
 # identity operators
 is_ = IsOperator

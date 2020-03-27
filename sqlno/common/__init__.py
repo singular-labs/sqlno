@@ -1,5 +1,5 @@
 from sqlno.common import engine
-from sqlno.common.expressions import Expression
+from sqlno.common.expressions import Expression, ArrayExpression
 from sqlno.common.statements import SelectStatement, InsertStatement
 
 
@@ -12,3 +12,4 @@ def insert_into(table_name, *columns):
 
 
 e = Expression
+

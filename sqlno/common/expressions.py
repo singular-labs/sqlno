@@ -30,19 +30,52 @@ class Expression(object):
             return EqualOperator(other, self.value)
         return EqualOperator(self.value, other)
 
+    def __ne__(self, other):
+        if isinstance(other, Expression):
+            return NotEqualOperator(other, self.value)
+        return NotEqualOperator(self.value, other)
+
     def and_(self, other):
         return AndOperator(self.value, other)
+
+    def is_(self, other):
+        return IsOperator(self.value, other)
+
+    def is_not(self, other):
+        return IsNotOperator(self.value, other)
+
+    def not_in(self, other):
+        return NotInOperator(self.value, other)
+
+    def __le__(self, other):
+        return AtLeastOperator(self.value, other)
+
+    def __lt__(self, other):
+        return LessThenOperator(self.value, other)
+
+    def __gt__(self, other):
+        return GreaterThenOperator(self.value, other)
+
+
+class ArrayExpression(Expression):
+    def __init__(self, *value):
+        super(ArrayExpression, self).__init__('({})'.format(', '.join(self.value)))
 
 
 class BinaryOperator(Expression):
     OPERATOR = None
 
     def __init__(self, left, right):
-        super(BinaryOperator, self).__init__('{} {} {}'.format(left, self.OPERATOR, right))
+        value = '{} {} {}'.format(left, self.OPERATOR, right)
+        super(BinaryOperator, self).__init__(value)
 
 
 class DivisionOperator(BinaryOperator):
     OPERATOR = '/'
+
+
+class NotInOperator(BinaryOperator):
+    OPERATOR = 'NOT IN'
 
 
 class ConcatOperator(BinaryOperator):
@@ -53,8 +86,16 @@ class GreaterThenOperator(BinaryOperator):
     OPERATOR = '>'
 
 
+class LessThenOperator(BinaryOperator):
+    OPERATOR = '<'
+
+
 class AtMostOperator(BinaryOperator):
     OPERATOR = '>='
+
+
+class AtLeastOperator(BinaryOperator):
+    OPERATOR = '<='
 
 
 class EqualOperator(BinaryOperator):
@@ -114,6 +155,10 @@ class CompareWhenTuple(object):
 
 
 class CaseContext(object):
+    def __init__(self, when_tuples=None, else_result=None):
+        self.when_tuples = when_tuples or []
+        self.else_result = else_result
+
     def _get_case(self):
         raise NotImplementedError()
 
@@ -128,20 +173,15 @@ class CaseContext(object):
         return expression
 
 
-@attr.s()
 class ConditionCaseContext(CaseContext):
-    when_tuples = attr.ib(default=[])
-    else_result = attr.ib(default=None)
-
     def _get_case(self):
         return 'CASE '
 
 
-@attr.s()
 class CompareCaseContext(CaseContext):
-    value = attr.ib()
-    when_tuples = attr.ib(default=[])
-    else_result = attr.ib(default=None)
+    def __init__(self, value, when_tuples=None, else_result=None):
+        self.value = value
+        super(CompareCaseContext, self).__init__(when_tuples, else_result)
 
     def _get_case(self):
         return 'CASE {} '.format(self.value)

@@ -80,3 +80,31 @@ class ToUnixTimeFunction(Function):
 
     def __call__(self, value):
         return super(ToUnixTimeFunction, self).__call__(value)
+
+
+class FromUnixTimeFunction(Function):
+    NAME = 'from_unixtime'
+
+    def __call__(self, value):
+        return super(FromUnixTimeFunction, self).__call__(value)
+
+
+class DateFunction(Function):
+    NAME = 'date'
+
+    def __call__(self, value):
+        return super(DateFunction, self).__call__(value)
+
+
+class AtTimezoneFunction(Function):
+    NAME = 'at_timezone'
+
+    def __call__(self, value):
+        return super(AtTimezoneFunction, self).__call__(value)
+
+
+class SumFunction(Function):
+    NAME = 'at_timezone'
+
+    def __call__(self, *values):
+        return super(SumFunction, self).__call__(*values)
