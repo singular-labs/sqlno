@@ -1,54 +1,41 @@
 from sqlno.common import Expression
 
 
-class Function(object):
-    NAME = None
-
-    @classmethod
-    def format_arguments_expression(cls, *arguments):
-        return ', '.join(map(str, arguments))
-
-    def __call__(self, *arguments):
-        return Expression('{}({})'.format(self.NAME, self.format_arguments_expression(*arguments)))
+def _format_arguments(*arguments):
+    return ', '.join(map(str, arguments))
 
 
-class ValuesFunction(Function):
-    NAME = 'values'
-
-    def __call__(self, column_name):
-        return super(ValuesFunction, self).__call__(column_name)
+def _format_function(name, arguments_expression):
+    return Expression('{}({})'.format(name, arguments_expression))
 
 
-class IfFunction(Function):
-    NAME = 'if'
-
-    def __call__(self, condition, truth_value, faulty_value):
-        return super(IfFunction, self).__call__(condition, truth_value, faulty_value)
+def _format_comma_separated_arguments_function(name, *arguments):
+    return Expression('{}({})'.format(name, _format_arguments(*arguments)))
 
 
-class CoalesceFunction(Function):
-    NAME = 'coalesce'
-
-    def __call__(self, value, *rest_of_values):
-        return super(CoalesceFunction, self).__call__(value, *rest_of_values)
+def values(column_name):
+    return _format_comma_separated_arguments_function('values', column_name)
 
 
-class CurrentTimestampFunction(Function):
-    NAME = 'current_timestamp'
-
-    def __call__(self):
-        return super(CurrentTimestampFunction, self).__call__()
-
-
-class SubStrFunction(Function):
-    NAME = 'substr'
-
-    def __call__(self, string, start, length):
-        return super(SubStrFunction, self).__call__(string, start, length)
+def if_(condition, truth_value, faulty_value):
+    return _format_comma_separated_arguments_function(
+        'if', condition, truth_value, faulty_value
+    )
 
 
-substr = SubStrFunction()
-coalesce = CoalesceFunction()
-if_ = IfFunction()
-values = ValuesFunction()
-current_timestamp = CurrentTimestampFunction()
+def coalesce(value, *rest_of_values):
+    return _format_comma_separated_arguments_function(
+        'coalesce', value, *rest_of_values
+    )
+
+
+def current_timestamp():
+    return _format_comma_separated_arguments_function(
+        'current_timestamp'
+    )
+
+
+def substr(string, start, length):
+    return _format_comma_separated_arguments_function(
+        'substr', string, start, length
+    )

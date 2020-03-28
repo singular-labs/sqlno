@@ -1,110 +1,91 @@
-from sqlno.common.functions import Function
+from sqlno.common.functions import _format_comma_separated_arguments_function, _format_function
 
 
-class ParseDatetimeFunction(Function):
-    NAME = 'parse_datetime'
-
-    def __call__(self, datetime_value, datetime_format):
-        return super(ParseDatetimeFunction, self).__call__(datetime_value, datetime_format)
-
-
-class ReplaceFunction(Function):
-    NAME = 'replace'
-
-    def __call__(self, string, pattern, replacement):
-        return super(ReplaceFunction, self).__call__(string, pattern, replacement)
+def parse_datetime(value, format_):
+    return _format_comma_separated_arguments_function(
+        'parse_datetime', value, format_
+    )
 
 
-class UrlExtractParameterFunction(Function):
-    NAME = 'url_extract_parameter'
-
-    def __call__(self, url, parameter):
-        return super(UrlExtractParameterFunction, self).__call__(url, parameter)
-
-
-class TrimFunction(Function):
-    NAME = 'trim'
-
-    def __call__(self, string):
-        return super(TrimFunction, self).__call__(string)
+def replace(string, pattern, replacement):
+    return _format_comma_separated_arguments_function(
+        'replace', string, pattern, replacement
+    )
 
 
-class JsonExtractScalarFunction(Function):
-    NAME = 'json_extract_scalar'
-
-    def __call__(self, json_string, json_query):
-        return super(JsonExtractScalarFunction, self).__call__(json_string, json_query)
-
-
-class LowerFunction(Function):
-    NAME = 'lower'
-
-    def __call__(self, string):
-        return super(LowerFunction, self).__call__(string)
+def url_extract_parameter(url, parameter):
+    return _format_comma_separated_arguments_function(
+        'url_extract_parameter', url, parameter
+    )
 
 
-class CastFunction(Function):
-    NAME = 'cast'
-
-    def __call__(self, expression, as_):
-        return super(CastFunction, self).__call__(expression, as_)
-
-    @classmethod
-    def format_arguments_expression(cls, *arguments):
-        return '{} AS {}'.format(*map(str, arguments))
+def trim(string):
+    return _format_comma_separated_arguments_function(
+        'trim', string
+    )
 
 
-class LengthFunction(Function):
-    NAME = 'length'
-
-    def __call__(self, string):
-        return super(LengthFunction, self).__call__(string)
-
-
-class GreatestFunction(Function):
-    NAME = 'greatest'
-
-    def __call__(self, *values):
-        return super(GreatestFunction, self).__call__(*values)
+def json_extract_scalar(json_string, json_query):
+    return _format_comma_separated_arguments_function(
+        'json_extract_scalar', json_string, json_query
+    )
 
 
-class FloorFunction(Function):
-    NAME = 'floor'
-
-    def __call__(self, value):
-        return super(FloorFunction, self).__call__(value)
-
-
-class ToUnixTimeFunction(Function):
-    NAME = 'to_unixtime'
-
-    def __call__(self, value):
-        return super(ToUnixTimeFunction, self).__call__(value)
+def lower(string):
+    return _format_comma_separated_arguments_function(
+        'lower', string
+    )
 
 
-class FromUnixTimeFunction(Function):
-    NAME = 'from_unixtime'
-
-    def __call__(self, value):
-        return super(FromUnixTimeFunction, self).__call__(value)
-
-
-class DateFunction(Function):
-    NAME = 'date'
-
-    def __call__(self, value):
-        return super(DateFunction, self).__call__(value)
+def cast(expression, as_):
+    return _format_function(
+        'cast', '{} AS {}'.format(expression, as_)
+    )
 
 
-class AtTimezoneFunction(Function):
-    NAME = 'at_timezone'
+def length(string):
+    return _format_comma_separated_arguments_function(
+        'length', string
+    )
 
-    def __call__(self, value):
-        return super(AtTimezoneFunction, self).__call__(value)
+
+def greatest(*values):
+    return _format_comma_separated_arguments_function(
+        'greatest', *values
+    )
 
 
-class SumFunction(Function):
-    NAME = 'at_timezone'
+def floor(value):
+    return _format_comma_separated_arguments_function(
+        'floor', value
+    )
 
-    def __call__(self, *values):
-        return super(SumFunction, self).__call__(*values)
+
+def to_unixtime(value):
+    return _format_comma_separated_arguments_function(
+        'to_unixtime', value
+    )
+
+
+def from_unixtime(value):
+    return _format_comma_separated_arguments_function(
+        'from_unixtime', value
+    )
+
+
+def date(value):
+    return _format_comma_separated_arguments_function(
+        'date', value
+    )
+
+
+def at_timezone(value):
+    return _format_comma_separated_arguments_function(
+        'at_timezone', value
+    )
+
+
+def sum_(*values):
+    return _format_comma_separated_arguments_function(
+        'sum', *values
+    )
