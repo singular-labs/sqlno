@@ -1,4 +1,4 @@
-from sqlno.common import Expression
+from sqlno.common.expressions import Expression as _Expression
 
 
 def _format_arguments(*arguments):
@@ -6,11 +6,11 @@ def _format_arguments(*arguments):
 
 
 def _format_function(name, arguments_expression):
-    return Expression('{}({})'.format(name, arguments_expression))
+    return _Expression('{}({})'.format(name, arguments_expression))
 
 
 def _format_comma_separated_arguments_function(name, *arguments):
-    return Expression('{}({})'.format(name, _format_arguments(*arguments)))
+    return _Expression('{}({})'.format(name, _format_arguments(*arguments)))
 
 
 def values(column_name):

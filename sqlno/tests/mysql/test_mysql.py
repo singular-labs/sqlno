@@ -1,7 +1,6 @@
 from sqlno import p, and_, s
-from sqlno.common import e
 from sqlno.mysql import (
-    select, astrix, t, set_, insert_into, if_, gte, values, coalesce, case, case_when,
+    select, astrix, t, set_, insert_into, if_, gte, values, coalesce, case, case_when, e
 )
 from sqlno.athena import (
     cast,

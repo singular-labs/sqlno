@@ -1,22 +1,16 @@
 from six.moves import reduce
 
-from sqlno.common import ArrayExpression
 from sqlno.common.expressions import (
-    Assignment, AtMostOperator, Parenthesize, IsNotOperator, NotEqualOperator, AndOperator, GreaterThenOperator,
-    IsOperator, OrOperator, ConditionCaseExpression, CompareCaseExpression,
-    ConcatOperator,
-    Stringifies,
-    EqualOperator,
+    Assignment, AtMostOperator, p, IsNotOperator, NotEqualOperator, AndOperator, GreaterThenOperator,
+    IsOperator, OrOperator, ConcatOperator, s, EqualOperator,
 )
 
 # consts
 astrix = '*'
-null = 'NULL'
+NULL = 'NULL'
 
 # expression
 set_ = Assignment
-p = Parenthesize
-s = Stringifies
 
 
 # boolean operators
@@ -43,4 +37,6 @@ def concat(*operands):
     return reduce(ConcatOperator, operands)
 
 
-a = ArrayExpression
+# types
+INTEGER = 'INTEGER'
+BIGINT = 'BIGINT'

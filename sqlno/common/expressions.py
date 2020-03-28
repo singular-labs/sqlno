@@ -26,13 +26,9 @@ class Expression(object):
         return str(self.value)
 
     def __eq__(self, other):
-        if isinstance(other, Expression):
-            return EqualOperator(other, self.value)
         return EqualOperator(self.value, other)
 
     def __ne__(self, other):
-        if isinstance(other, Expression):
-            return NotEqualOperator(other, self.value)
         return NotEqualOperator(self.value, other)
 
     def and_(self, other):
@@ -57,9 +53,14 @@ class Expression(object):
         return GreaterThenOperator(self.value, other)
 
 
-class ArrayExpression(Expression):
-    def __init__(self, *value):
-        super(ArrayExpression, self).__init__('({})'.format(', '.join(self.value)))
+e = Expression
+
+
+def array(*values):
+    return Expression('({})'.format(', '.join(values)))
+
+
+a = array
 
 
 class BinaryOperator(Expression):
@@ -106,14 +107,18 @@ class NotEqualOperator(BinaryOperator):
     OPERATOR = '!='
 
 
-class Parenthesize(Expression):
-    def __init__(self, expression):
-        super(Parenthesize, self).__init__('({})'.format(expression))
+def parenthesize(expression):
+    return Expression('({})'.format(expression))
 
 
-class Stringifies(Expression):
-    def __init__(self, string):
-        super(Stringifies, self).__init__("'{}'".format(string))
+p = parenthesize
+
+
+def stringifies(string):
+    return Expression("'{}'".format(string))
+
+
+s = stringifies
 
 
 class IsNotOperator(BinaryOperator):
