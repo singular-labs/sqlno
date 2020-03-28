@@ -1,10 +1,7 @@
-from sqlno.common.clauses import SelectClause, InsertClause
+from sqlno.common.clauses import SelectClause, InsertClause, ValuesClause
 
 
-class Statement(object):
-    def __init__(self, dialect):
-        self.dialect = dialect
-
+class StatementContext(object):
     @property
     def clauses(self):
         raise NotImplementedError()
@@ -13,42 +10,32 @@ class Statement(object):
         return ' '.join(map(str, self.clauses))
 
 
-class SelectStatement(Statement):
-    def __init__(self, dialect):
-        super(SelectStatement, self).__init__(dialect)
-
+class SelectContext(StatementContext):
+    def __init__(self):
         self.select_clause = None
         self.from_clause = None
         self.where_clause = None
-
-    def select(self, *columns):
-        self.select_clause = SelectClause(self, *columns)
-        return self.select_clause
 
     @property
     def clauses(self):
         return filter(None, [self.select_clause, self.from_clause, self.where_clause])
 
-    @classmethod
-    def create(cls, dialect):
-        return SelectStatement(dialect)
+
+def select(*columns):
+    return SelectClause(SelectContext(), *columns)
 
 
-class InsertStatement(Statement):
-    def __init__(self, engine):
-        super(InsertStatement, self).__init__(engine)
+class InsertContext(StatementContext):
+    VALUES_CLAUSE = ValuesClause
 
+    def __init__(self):
         self.insert_clause = None
         self.values_clause = None
-
-    def insert(self):
-        self.insert_clause = InsertClause.create(self)
-        return self.insert_clause
 
     @property
     def clauses(self):
         return [self.insert_clause, self.values_clause]
 
-    @classmethod
-    def create(cls, engine):
-        return engine.insert_statement_cls(engine)
+
+def insert_into(table, columns):
+    return InsertClause(InsertContext()).into(table, columns)

@@ -39,11 +39,11 @@ def test_select():
 def test_insert():
     expected_query = 'INSERT INTO table_name (column_name) VALUES (1) ON DUPLICATE KEY UPDATE column_name_2 = 4;'
 
-    assert expected_query == insert_into(
+    assert insert_into(
         'table_name', 'column_name'
     ).values([1]).on_duplicate_key_update(
         set_('column_name_2', 4)
-    ).semicolon()
+    ).semicolon() == expected_query
 
     expected_query = 'INSERT INTO table_name (column_name) VALUES (1) ON DUPLICATE KEY UPDATE column_name_2 = 4;'
 

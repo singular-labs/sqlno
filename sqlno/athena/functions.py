@@ -79,9 +79,9 @@ def date(value):
     )
 
 
-def at_timezone(value):
+def at_timezone(timestamp, timezone):
     return _format_comma_separated_arguments_function(
-        'at_timezone', value
+        'at_timezone', timestamp, timezone
     )
 
 

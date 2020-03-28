@@ -195,9 +195,9 @@ class ConditionCaseExpression(object):
     def when(self, compare_value):
         return ConditionWhenExpression(self.context, compare_value)
 
-    @classmethod
-    def create(cls, condition):
-        return ConditionCaseExpression(ConditionCaseContext()).when(condition)
+
+def case_when(condition):
+    return ConditionWhenExpression(ConditionCaseContext(), condition)
 
 
 class CompareCaseExpression(object):
@@ -208,9 +208,9 @@ class CompareCaseExpression(object):
     def when(self, compare_value):
         return CompareWhenExpression(self.context, compare_value)
 
-    @classmethod
-    def create(cls, value):
-        return CompareCaseExpression(CompareCaseContext(value))
+
+def case(expression):
+    return CompareCaseExpression(CompareCaseContext(expression))
 
 
 class SatisfyingCompareCaseExpression(CompareCaseExpression):
@@ -232,9 +232,9 @@ class SatisfyingConditionCaseExpression(ConditionCaseExpression):
 
 
 class ConditionWhenExpression(object):
-    def __init__(self, context, compare_value):
+    def __init__(self, context, condition):
         self.context = context
-        self.condition = compare_value
+        self.condition = condition
 
     def then(self, result):
         self.context.when_tuples.append(ConditionWhenTuple(self.condition, result))

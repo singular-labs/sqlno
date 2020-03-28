@@ -1,18 +1,18 @@
-from sqlno.common.clauses import ValuesClause as CommonValuesClause, EdgeClause
+from sqlno.common.clauses import ValuesClause, EdgeClause
 
 
-class ValuesClause(CommonValuesClause):
-    def __init__(self, statement, *values_lists):
-        super(ValuesClause, self).__init__(statement, *values_lists)
+class MySqlValuesClause(ValuesClause):
+    def __init__(self, context, *values_lists):
+        super(MySqlValuesClause, self).__init__(context, *values_lists)
 
     def on_duplicate_key_update(self, *assignments):
-        self.statement.on_duplicate_key_update_clause = OnDuplicateKeyUpdateClause(self.statement, *assignments)
-        return self.statement.on_duplicate_key_update_clause
+        return OnDuplicateKeyUpdateClause(self.context, *assignments)
 
 
 class OnDuplicateKeyUpdateClause(EdgeClause):
     def __init__(self, statement, *assignments):
         super(OnDuplicateKeyUpdateClause, self).__init__(statement)
+        self.context.on_duplicate_key_update_clause = self
         self.assignments = assignments
 
     def __str__(self):

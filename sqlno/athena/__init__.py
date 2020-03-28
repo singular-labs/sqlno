@@ -1,10 +1,9 @@
 from sqlno.athena.functions import *
-from sqlno.common import (ArrayExpression)
-# noinspection PyUnresolvedReferences
+from sqlno.common import e
 from sqlno.common.aliases import (
-    p, is_, null, case_when, concat, s, eq, gt, and_, or_,
+    p, is_, null, concat, s, eq, gt, and_, or_, a
 )
-# noinspection PyUnresolvedReferences
 from sqlno.common.functions import (
     substr, coalesce,
 )
+from sqlno.common.expressions import (case_when)
