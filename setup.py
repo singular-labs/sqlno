@@ -8,7 +8,7 @@ with open(path.join(this_directory, 'README.md'), 'rb') as f:
 
 setup(
     name='sqlno',
-    version='2020.1.1',
+    version='2020.2.1',
     packages=find_packages(),
     provides=['sqlno'],
     description='Another SQL generator that stick to sql syntax as most as possible',
