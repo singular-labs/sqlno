@@ -1,75 +1,96 @@
-from sqlno import p, and_, s
-from sqlno.mysql import (
-    select, astrix, t, set_, insert_into, if_, gte, values, coalesce, case, case_when, e
-)
+from parametrization import Parametrization
+
 from sqlno.athena import (
     cast,
-    greatest,
-    floor,
-    to_unixtime,
-    lower,
-    json_extract_scalar,
+)
+from sqlno.common.structures import c
+from sqlno.mysql import (
+    select, astrix, t, set_, insert_into, if_, gte, values, coalesce, case, case_when, e,
 )
 
+TEST_TABLE_0 = t('t_0')
 
-def test_select():
-    assert 'SELECT *;' == select(astrix).semicolon()
+TEST_ALIASED_TABLE_0 = TEST_TABLE_0.as_('t_a_0')
 
-    table_alias = t('table_name').as_('table_alias')
-    condition = table_alias.integer_column('column_name').greater_then(2)
+TEST_ALIASED_TABLE_0_COLUMN_0 = TEST_ALIASED_TABLE_0.c_0
 
-    assert 'SELECT * FROM table_name as table_alias WHERE table_alias.column_name > 2;' == select(
-        astrix
-    ).from_(
-        table_alias
-    ).where(
-        condition
-    ).semicolon()
+TEST_COLUMN_0 = c('c_0')
+TEST_COLUMN_1 = c('c_1')
 
-    assert 'SELECT * FROM table_name as table_alias WHERE table_alias.column_name > 2;' == select(
+
+@Parametrization.autodetect_parameters()
+@Parametrization.case(
+    name='minimal',
+    expected_query='SELECT *;',
+    actual_query=select(astrix).semicolon(),
+)
+@Parametrization.case(
+    name='regular',
+    expected_query='SELECT * FROM t_0 as t_a_0 WHERE t_a_0.c_0 > 2;',
+    actual_query=select(
         '*'
     ).from_(
-        'table_name as table_alias'
+        TEST_ALIASED_TABLE_0
     ).where(
-        'table_alias.column_name > 2'
-    ).semicolon()
+        TEST_ALIASED_TABLE_0_COLUMN_0 > 2
+    ).semicolon(),
+)
+def test_select(expected_query, actual_query):
+    assert str(actual_query) == expected_query
 
 
-def test_insert():
-    expected_query = 'INSERT INTO table_name (column_name) VALUES (1) ON DUPLICATE KEY UPDATE column_name_2 = 4;'
-
-    assert insert_into(
-        'table_name', 'column_name'
+@Parametrization.autodetect_parameters()
+@Parametrization.case(
+    name='minimal',
+    expected_query='INSERT INTO t_0 (c_0) VALUES (1) ON DUPLICATE KEY UPDATE c_1 = 4;',
+    actual_query=insert_into(
+        TEST_TABLE_0, TEST_COLUMN_0
     ).values([1]).on_duplicate_key_update(
-        set_('column_name_2', 4)
-    ).semicolon() == expected_query
-
-    expected_query = 'INSERT INTO table_name (column_name) VALUES (1) ON DUPLICATE KEY UPDATE column_name_2 = 4;'
-
-    assert expected_query == insert_into(
-        'table_name', 'column_name'
+        set_(TEST_COLUMN_1, 4)
+    ).semicolon(),
+)
+@Parametrization.case(
+    name='without_structures',
+    expected_query='INSERT INTO t_0 (c_0) VALUES (1) ON DUPLICATE KEY UPDATE c_1 = 4;',
+    actual_query=insert_into(
+        't_0', 'c_0'
     ).values([1]).on_duplicate_key_update(
-        'column_name_2 = 4'
-    ).semicolon()
-
-    expected_query = 'INSERT INTO t (c1) VALUES (1) ' \
-                     'ON DUPLICATE KEY UPDATE ' \
-                     'c2 = if(values(c1) >= coalesce(c1, -1), values(c1), c1)' \
-                     ';'
-
-    assert expected_query == insert_into(
-        't', 'c1'
+        set_('c_1', 4)
+    ).semicolon(),
+)
+@Parametrization.case(
+    name='without_structures_and_string_set',
+    expected_query='INSERT INTO t_0 (c_0) VALUES (1) ON DUPLICATE KEY UPDATE c_1 = 4;',
+    actual_query=insert_into(
+        't_0', 'c_0'
     ).values([1]).on_duplicate_key_update(
-        set_('c2', if_(gte(values('c1'), coalesce('c1', -1)), values('c1'), 'c1'))
+        'c_1 = 4'
+    ).semicolon(),
+)
+@Parametrization.case(
+    name='without_structures_and_string_set',
+    expected_query='INSERT INTO t_0 (c_0) VALUES (1) '
+                   'ON DUPLICATE KEY UPDATE '
+                   'c_1 = if(values(c_0) >= coalesce(c_0, -1), values(c_0), c_0)'
+                   ';',
+    actual_query=insert_into(
+        TEST_TABLE_0, TEST_COLUMN_0
+    ).values([1]).on_duplicate_key_update(
+        set_(
+            TEST_COLUMN_1,
+            if_(gte(values(TEST_COLUMN_0), coalesce(TEST_COLUMN_0, -1)), values(TEST_COLUMN_0), TEST_COLUMN_0)
+        )
     ).semicolon()
-
-
-def test_insert_with_multiple_values():
-    expected_query = 'INSERT INTO t (c1,c2) VALUES (1,2), (2,3);'
-
-    assert expected_query == insert_into(
-        't', 'c1', 'c2'
+)
+@Parametrization.case(
+    name='without_structures_and_string_set',
+    expected_query='INSERT INTO t_0 (c_0, c_1) VALUES (1,2),(2,3);',
+    actual_query=insert_into(
+        TEST_TABLE_0, TEST_COLUMN_0, TEST_COLUMN_1
     ).values([1, 2], [2, 3]).semicolon()
+)
+def test_insert(expected_query, actual_query):
+    assert str(actual_query) == expected_query
 
 
 def test_case():

@@ -39,7 +39,7 @@ class ValuesClause(EdgeClause):
 
     def __str__(self):
         query = 'VALUES {}'.format(
-            ', '.join(
+            ','.join(
                 ['({})'.format(','.join([str(value) for value in value_list])) for value_list in self.values_lists]
             )
         )
@@ -85,6 +85,6 @@ class InsertClause(Clause):
             clause += ' INTO {}'.format(self.table_name)
 
         if self.columns is not None:
-            clause += ' ({})'.format(','.join(self.columns))
+            clause += ' ({})'.format(', '.join(map(str, self.columns)))
 
         return clause

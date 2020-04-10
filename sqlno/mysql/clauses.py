@@ -17,5 +17,5 @@ class OnDuplicateKeyUpdateClause(EdgeClause):
 
     def __str__(self):
         return 'ON DUPLICATE KEY UPDATE {}'.format(
-            ', '.join([str(assignment) for assignment in self.assignments])
+            ','.join([str(assignment) for assignment in self.assignments])
         )

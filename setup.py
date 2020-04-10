@@ -21,6 +21,7 @@ setup(
     url='https://github.com/singular-labs/parametrization',
     keywords="sqlno, sql",
     install_requires=REQUIREMENTS,
+    tests_require=['pytest', 'pytest-parametrization'],
     license="MIT License",
     python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     include_package_data=True,
