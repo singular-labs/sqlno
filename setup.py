@@ -6,8 +6,6 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), 'rb') as f:
     long_description = f.read().decode('utf8')
 
-REQUIREMENTS = ['attr', 'six']
-
 setup(
     name='sqlno',
     version='2020.1.1',
@@ -20,7 +18,7 @@ setup(
     author_email='devs@singular.net',
     url='https://github.com/singular-labs/parametrization',
     keywords="sqlno, sql",
-    install_requires=REQUIREMENTS,
+    install_requires=['attr', 'six'],
     tests_require=['pytest', 'pytest-parametrization'],
     license="MIT License",
     python_requires='>=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
